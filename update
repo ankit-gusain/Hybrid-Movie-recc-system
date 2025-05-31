@@ -1,0 +1,220 @@
+
+
+# import streamlit as st
+# from streamlit_lottie import st_lottie
+# import requests
+# import pandas as pd
+
+# # Load Lottie animation from URL
+# def load_lottieurl(url: str):
+#     r = requests.get(url)
+#     if r.status_code != 200:
+#         return None
+#     return r.json()
+
+# # Fetch movie poster from TMDB
+# def get_movie_poster(movie_title):
+#     search_url = f"https://api.themoviedb.org/3/search/movie?api_key=e22def756578a3a85977d58ef5b38d0a&query={movie_title}"
+#     response = requests.get(search_url)
+#     if response.status_code == 200 and response.json()["results"]:
+#         poster_path = response.json()["results"][0].get("poster_path")
+#         if poster_path:
+#             return f"https://image.tmdb.org/t/p/w500{poster_path}"
+#     return "https://via.placeholder.com/150"
+
+# # Session state for navigation
+# if "page" not in st.session_state:
+#     st.session_state.page = "intro"
+
+# def go_to_main():
+#     st.session_state.page = "main"
+
+# def go_to_intro():
+#     st.session_state.page = "intro"
+
+# # Set page configuration
+# st.set_page_config(page_title="🎬 MovieVerse", layout="wide")
+
+# # CSS styling for animated background and layout
+# st.markdown("""
+# <style>
+# body {
+#     background: black !important;
+#     color: white;
+#     font-family: 'Segoe UI', sans-serif;
+#     overflow-x: hidden;
+# }
+
+# .stars {
+#     position: fixed;
+#     width: 100vw;
+#     height: 100vh;
+#     background: #000 url('https://raw.githubusercontent.com/VincentGarreau/particles.js/master/demo/media/star.png') repeat;
+#     animation: moveStars 300s linear infinite;
+#     top: 0;
+#     left: 0;
+#     z-index: -2;
+# }
+
+ 
+# .intro-wrapper {
+#     display: flex;
+#     justify-content: space-between;
+#     align-items: center; 
+# }
+
+# .intro-text {
+#     max-width: 600px;
+#     animation: floatUp 3s ease-in-out infinite alternate;
+# }
+
+# .intro-text h1 {
+#     font-size: 64px;
+#     margin-bottom: 20px;
+#     color: #ffffff;
+#     text-shadow: 0 0 20px #ffffff66;
+# }
+
+# .intro-text p {
+#     font-size: 20px;
+#     line-height: 1.6;
+#     color: #cccccc;
+# }
+
+# .intro-text button {
+#     background: linear-gradient(135deg, #ff4b4b, #ff6a6a);
+#     color: white;
+#     padding: 14px 35px;
+#     font-size: 20px;
+#     border: none;
+#     border-radius: 40px;
+#     cursor: pointer;
+#     margin-top: 40px;
+#     box-shadow: 0 0 25px #ff4b4b;
+#     transition: all 0.4s ease-in-out;
+# }
+
+# .intro-text button:hover {
+#     background: white;
+#     color: black;
+#     transform: scale(1.08);
+#     box-shadow: 0 0 35px white;
+# }
+
+# .back-btn {
+#     background-color: transparent;
+#     border: 2px solid white;
+#     color: white;
+#     padding: 10px 25px;
+#     border-radius: 25px;
+#     margin-top: 20px;
+#     transition: all 0.3s ease;
+# }
+
+# .back-btn:hover {
+#     background-color: white;
+#     color: black;
+#     transform: scale(1.5);
+# }
+
+# @keyframes moveStars {
+#     from { background-position: 0 0; }
+#     to { background-position: -10000px 5000px; }
+# }
+
+# @keyframes floatUp {
+#     0% { transform: translateY(0); }
+#     100% { transform: translateY(-12px); }
+# }
+
+# @keyframes pulse {
+#     0%, 100% { box-shadow: 0 0 60px 20px #ffffffaa; }
+#     50% { box-shadow: 0 0 80px 30px #ffffffcc; }
+# }
+# </style>
+
+# <div class="stars"></div>
+# <div class="moon"></div>
+# """, unsafe_allow_html=True)
+
+# # ========== INTRO PAGE ==========
+# if st.session_state.page == "intro":
+#     st.markdown("<div class='intro-wrapper'>", unsafe_allow_html=True)
+#     st.markdown("""
+#         <div class='intro-text'>
+#             <h1>🌌 MovieVerse</h1>
+#             <p>Your personalized gateway to cinematic discovery.<br>Let the stars guide you to your next favorite movie 🍿</p>
+#         """, unsafe_allow_html=True)
+#     if st.button("🚀 Enter App", key="enter"):
+#         go_to_main()
+#     st.markdown("</div></div>", unsafe_allow_html=True)
+
+# # ========== MAIN PAGE ==========
+# elif st.session_state.page == "main":
+#     st.markdown("<div style='text-align: right; margin-top: 10px;'>", unsafe_allow_html=True)
+#     if st.button("⬅️ Back to Intro", key="back"):
+#         go_to_intro()
+#     st.markdown("</div>", unsafe_allow_html=True)
+
+#     st.title("🎬 Movie Recommendation System")
+#     st.markdown("🔍 Get personalized movie recommendations based on your preferences!")
+
+#     st.sidebar.header("⚙️ Configure Your Preferences")
+#     user_id = st.sidebar.number_input("Enter User ID:", min_value=1, step=1, value=1)
+#     genre = st.sidebar.text_input("Enter Genre (Optional):")
+#     filter_type = st.sidebar.selectbox("Select Filter Type:", ["popular", "trending", "None"], index=0)
+#     top_n = st.sidebar.slider("Number of Recommendations:", min_value=1, max_value=10, value=5)
+
+#     BASE_URL = "https://4c90-35-221-226-221.ngrok-free.app/recommend"
+
+#     tab1, tab2 = st.tabs(["📢 Recommendations", "ℹ️ About"])
+
+#     with tab1:
+#         if st.button("🎥 Get Recommendations"):
+#             with st.spinner("🔄 Fetching movie recommendations..."):
+#                 params = {
+#                     "user_id": user_id,
+#                     "genre": genre if genre else "",
+#                     "filter_type": filter_type if filter_type != "None" else "",
+#                     "top_n": top_n
+#                 }
+#                 response = requests.get(BASE_URL, params=params)
+#                 if response.status_code == 200:
+#                     recommendations = response.json()
+#                     if "error" in recommendations or not recommendations:
+#                         st.error("⚠️ No recommendations found. Try different settings!")
+#                     else:
+#                         df = pd.DataFrame(recommendations)
+#                         st.success(f"✅ Found {len(df)} movies for you!")
+#                         for _, row in df.iterrows():
+#                             col1, col2 = st.columns([1, 4])
+#                             with col1:
+#                                 poster_url = get_movie_poster(row['title'])
+#                                 st.image(poster_url, width=120)
+#                             with col2:
+#                                 st.markdown(f"**🎬 {row['title']}**")
+#                                 st.markdown(f"📅 Release Date: {row['release_date']}")
+#                                 st.markdown(f"⭐ Rating: {row['vote_average']} / 10")
+#                                 st.markdown(f"🎭 Genres: {', '.join(row['genres'])}")
+#                                 st.write("---")
+#                 else:
+#                     st.error("❌ Failed to fetch recommendations. Check API URL and try again!")
+
+#     with tab2:
+#         st.markdown("### ℹ️ About This App")
+#         st.write("This Movie Recommendation System uses a hybrid approach:")
+#         st.markdown("- 🎯 LightFM for collaborative filtering")
+#         st.markdown("- 🏆 Popularity & trending scores for recommendations")
+#         st.markdown("- 🎭 Genre & actor-based filtering")
+#         st.write("**Developed by:** Ankit 🚀")
+
+
+
+
+
+
+
+
+
+
+
